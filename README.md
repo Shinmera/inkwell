@@ -20,3 +20,5 @@ From there you can retrieve information about current battles (`list-battles`, `
     ;     ...)
 
 The library takes care to transform the results from the API into sensible objects for you to inspect and extract information from with ease. Have a look at the symbol index to see what is offered.
+
+A note about requests: this library does not take any care to attempt and rate limit or cache. Please be mindful that if you send too many requests over your session, you may get blocked by Nintendo. However, since many statistics only update infrequently (~3 minutes for battles) or rarely (~1 hour for schedules), it should be easy to implement a caching scheme in your application.
