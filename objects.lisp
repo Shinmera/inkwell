@@ -20,7 +20,7 @@
 
 (define-unreadable-printer battle
   "~a ~:[VICTORY~;LOSS~] {~a}"
-  (rule battle) (victory-p battle) (battle-number battle))
+  (rule battle) (victory-p battle) (id battle))
 
 (define-converter battle
   :id (=> "battle_number")
