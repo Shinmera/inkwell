@@ -20,4 +20,5 @@
   :depends-on (:drakma
                :yason
                :alexandria
-               :local-time))
+               :local-time
+               :documentation-utils))

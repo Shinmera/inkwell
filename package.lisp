@@ -20,6 +20,7 @@
    #:list-battles
    #:battle
    #:single-player
+   #:schedules
    #:list-stages
    #:timeline
    #:user
@@ -85,7 +86,6 @@
    #:player-rank
    #:star-rank
    #:rank
-   #:nickname
    #:progress
    #:s-plus-number
    #:thumbnail

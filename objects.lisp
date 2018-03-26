@@ -65,7 +65,7 @@
 
 (define-unreadable-printer player-result
   "~a ~ap ~as ~aa ~ak ~ad"
-  (nickname (player player-result)) (paint-points player-result)
+  (name (player player-result)) (paint-points player-result)
   (specials player-result) (assists player-result) (kills player-result) (deaths player-result))
 
 (define-converter player-result
@@ -86,10 +86,10 @@
    star-rank
    id
    rank
-   nickname))
+   name))
 
 (define-unreadable-printer player
-  "~a {~a}" (nickname player) (id player))
+  "~a {~a}" (name player) (id player))
 
 (define-converter player
   :head (into (into 'gear (=> "head"))
@@ -102,7 +102,7 @@
   :star-rank (=> "star_rank")
   :id (=> "principal_id")
   :weapon (into 'weapon (=> "weapon"))
-  :nickname (=> "nickname")
+  :name (=> "name")
   :rank (into 'rank (=> "udemae")))
 
 (define-class rank ()
@@ -182,7 +182,7 @@
   :honor (=> "summary" "honor" "name")
   :clear-rate (=> "summary" "clear_rate")
   :cleared-weapons (loop for k being the hash-keys of (=> "summary" "weapon_cleared_info") using (hash-value v)
-                         when v collect k)
+                         when v collect (->weapon-name k))
   :stage-info (into 'stage-info (let ((info (=> "stage_infos")))
                                   (dolist (i info info)
                                     (setf (gethash "weapon_map" i) (=> "weapon_map"))))))
@@ -352,15 +352,15 @@
 
 (define-class user ()
   (id
-   nickname
+   name
    thumbnail))
 
 (define-unreadable-printer user
-  "~a {~a}" (nickname user) (id user))
+  "~a {~a}" (name user) (id user))
 
 (define-converter user
   :id (=> "nsa_id")
-  :nickname (=> "nickname")
+  :name (=> "nickname")
   :thumbnail (=> "thumbnail_url"))
 
 (define-class ranking ()
@@ -373,7 +373,7 @@
    sorting))
 
 (define-unreadable-printer ranking
-  "#~a ~a ~ap {~a}" (sorting ranking) (nickname (player ranking)) (score ranking) (id ranking))
+  "#~a ~a ~ap {~a}" (sorting ranking) (name (player ranking)) (score ranking) (id ranking))
 
 (define-converter ranking
   :id (=> "principal_id")
