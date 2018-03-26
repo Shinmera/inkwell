@@ -7,7 +7,7 @@
 (in-package #:org.shirakumo.inkwell)
 
 (defparameter *base-url* "https://app.splatoon2.nintendo.net/api")
-(defvar *iksm-session*)
+(defvar *session*)
 
 (define-condition api-request-failed (error)
   ((url :initarg :url :reader url)
@@ -29,7 +29,7 @@
                          :form-data form-data
                          :parameters parameters)))
 
-(defun request (endpoint &key urlparts parameters form-data (session *iksm-session*) string)
+(defun request (endpoint &key urlparts parameters form-data (session *session*) string)
   (let ((url (format NIL "~a~a~{/~a~}" *base-url* endpoint urlparts)))
     (multiple-value-bind (stream code) (%request url parameters form-data session)
       (case code
@@ -40,11 +40,12 @@
         (T
          (error 'api-request-failed :url url :code code :body (alexandria:read-stream-content-into-string stream)))))))
 
-(defun results ()
-  (into 'result (-> (request "/results") "results")))
+(defun list-battles ()
+  (into 'battle (-> (request "/results") "results")))
 
-(defun result (battle-id)
-  (into 'result (request "/results" :urlparts (list battle-id))))
+(defun battle (battle)
+  (let ((id (ensure-id 'battle battle)))
+    (into 'battle (request "/results" :urlparts (list id)))))
 
 (defun single-player ()
   (into 'single-player (request "/records/hero")))
@@ -61,13 +62,14 @@
 (defun timeline ()
   (into 'timeline (request "/timeline")))
 
-(defun user (user-id)
-  (into 'user (-> (request "/nickname_and_icon" :parameters `(("id" . ,user-id))) "nickname_and_icons" 0)))
+(defun user (user)
+  (let ((id (ensure-id 'user user)))
+    (into 'user (-> (request "/nickname_and_icon" :parameters `(("id" . ,id))) "nickname_and_icons" 0))))
 
 (defun active-festivals ()
   (into 'festival (-> (request "/festivals/active") "festivals")))
 
-(defun festivals ()
+(defun list-festivals ()
   (let* ((data (request "/festivals/pasts"))
          (results (-> data "results")))
     (into 'festival (loop for festival in (-> data "festivals")
@@ -76,8 +78,9 @@
                                          :key (lambda (result) (gethash "festival_id" result))))
                           collect festival))))
 
-(defun votes (festival-id)
-  (let ((data (request "/festivals" :urlparts (list festival-id "votes"))))
+(defun votes (festival)
+  (let* ((id (ensure-id 'festival festival))
+         (data (request "/festivals" :urlparts (list id "votes"))))
     (list (dolist (id (-> data "votes" "alpha"))
             (into 'user (find id (-> data "nickname_and_icons")
                               :key (lambda (user) (gethash "nsa_id" user)) :test #'string=)))
@@ -85,17 +88,19 @@
             (into 'user (find id (-> data "nickname_and_icons")
                               :key (lambda (user) (gethash "nsa_id" user)) :test #'string=))))))
 
-(defun rankings (festival-id)
-  (let ((data (request "/festivals" :urlparts (list festival-id "rankings"))))
+(defun rankings (festival)
+  (let* ((id (ensure-id 'festival festival))
+         (data (request "/festivals" :urlparts (list id "rankings"))))
     (list (into 'ranking (-> data "rankings" "alpha"))
           (into 'ranking (-> data "rankings" "bravo")))))
 
-(defun onlineshop ()
+(defun shop-info ()
   (let ((data (request "/onlineshop/merchandises")))
     (values (into 'merchandise (-> data "merchandises"))
             (into 'merchandise (-> data "ordered_info")))))
 
-(defun order (item-id &key override)
-  (into 'merchandise (-> (request "/onlineshop/order" :urlparts (list item-id)
-                                                      :form-data (when override `(("name" . "override"))))
-                         "ordered_info")))
+(defun order (merchandise &key override)
+  (let ((id (ensure-id 'merchandise merchandise)))
+    (into 'merchandise (-> (request "/onlineshop/order" :urlparts (list id)
+                                                        :form-data (when override `(("name" . "override"))))
+                           "ordered_info"))))

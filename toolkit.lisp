@@ -97,3 +97,12 @@
     (loop for (k v) on kvs by #'cddr
           do (setf (gethash k table) v))
     table))
+
+(defun ensure-id (type id-ish)
+  (cond ((typep id-ish type)
+         (id id-ish))
+        ((typep id-ish 'integer)
+         id-ish)
+        ((typep id-ish 'string)
+         id-ish)
+        (T (error "~s is not a ~a." id-ish type))))

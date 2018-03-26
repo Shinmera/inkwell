@@ -6,8 +6,8 @@
 
 (in-package #:org.shirakumo.inkwell)
 
-(define-class result ()
-  (battle-number
+(define-class battle ()
+  (id
    victory-p
    scores
    power
@@ -18,12 +18,12 @@
    rule
    teams))
 
-(define-unreadable-printer result
+(define-unreadable-printer battle
   "~a ~:[VICTORY~;LOSS~] {~a}"
-  (rule result) (victory-p result) (battle-number result))
+  (rule battle) (victory-p battle) (battle-number battle))
 
-(define-converter result
-  :battle-number (=> "battle_number")
+(define-converter battle
+  :id (=> "battle_number")
   :victory-p (not (null (string= "victory" (=> "my_team_result" "key"))))
   :scores (list (or (=> "my_team_count") (=> "my_team_percentage"))
                 (or (=> "other_team_count") (=> "other_team_percentage")))
@@ -426,7 +426,7 @@
 (define-converter timeline
   :id (=> "unique_id")
   :salmon-run (into 'salmon-run (=> "coop"))
-  :stats (into 'result (=> "stats" "recents"))
+  :stats (into 'battle (=> "stats" "recents"))
   :schedule (list :regular (into 'schedule (=> "schedule" "schedules" "regular"))
                   :ranked (into 'schedule (=> "schedule" "schedules" "gachi"))
                   :league (into 'schedule (=> "schedule" "schedules" "league")))
@@ -434,7 +434,7 @@
                    :previous (into 'challenge (=> "challenge" "last_archived_challenge")))
   :paint-points (=> "challenge" "total_paint_point")
   :merchandise (into 'merchandise (=> "onlineshop" "merchandise"))
-  :rank-up-match (into 'result (=> "udemae" "stat"))
+  :rank-up-match (into 'battle (=> "udemae" "stat"))
   :dlc-available-p (=> "download_contents" "is_available")
   :new-weapons (into 'weapon-release (=> "weapon_availability" "availabilities")))
 
