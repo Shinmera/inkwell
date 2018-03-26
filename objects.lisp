@@ -10,6 +10,7 @@
   (battle-number
    victory-p
    scores
+   power
    start-time
    duration
    stage
@@ -26,7 +27,9 @@
   :victory-p (not (null (string= "victory" (=> "my_team_result" "key"))))
   :scores (list (or (=> "my_team_count") (=> "my_team_percentage"))
                 (or (=> "other_team_count") (=> "other_team_percentage")))
-  :start-time (=> "start_time")
+  :power (=> "estimate_gachi_power")
+  ;; FIXME: Where to stuff weapon_paint_point ?
+  :start-time (->date (=> "start_time"))
   :duration (or (=> "elapsed_time") (* 3 60))
   :stage (into 'stage (=> "stage"))
   :mode (->mode (=> "game_mode" "key"))
@@ -219,12 +222,6 @@
   :clear-time (=> "clear_time")
   :image (=> "image"))
 
-(define-class schedule ()
-  ())
-
-(define-class timeline ()
-  ())
-
 (define-class festival ()
   (id
    teams
@@ -239,10 +236,10 @@
 
 (define-converter festival
   :id (=> "festival_id")
-  :announce-time (=> "times" "announce")
-  :start-time (=> "times" "start")
-  :end-time (=> "times" "end")
-  :result-time (=> "times" "result")
+  :announce-time (->date (=> "times" "announce"))
+  :start-time (->date (=> "times" "start"))
+  :end-time (->date (=> "times" "end"))
+  :result-time (->date (=> "times" "result"))
   :special-stage (into 'stage (=> "special_stage"))
   :teams (list (into 'alpha-team (=>))
                (into 'bravo-team (=>))))
@@ -295,7 +292,7 @@
   :gear (into (into 'gear (=> "gear"))
               (mkhash "main" (=> "skill")))
   :price (=> "price")
-  :end-time (=> "end_time")
+  :end-time (->date (=> "end_time"))
   :kind (->keyword (=> "kind"))
   :id (=> "id"))
 
@@ -351,4 +348,138 @@
 (define-converter skill
   :id (=> "id")
   :name (=> "name")
+  :image (=> "image"))
+
+(define-class user ()
+  (id
+   nickname
+   thumbnail))
+
+(define-unreadable-printer user
+  "~a {~a}" (nickname user) (id user))
+
+(define-converter user
+  :id (=> "nsa_id")
+  :nickname (=> "nickname")
+  :thumbnail (=> "thumbnail_url"))
+
+(define-class ranking ()
+  (id
+   unique-id
+   score
+   cheater-p
+   player
+   updated-time
+   sorting))
+
+(define-unreadable-printer ranking
+  "#~a ~a ~ap {~a}" (sorting ranking) (nickname (player ranking)) (score ranking) (id ranking))
+
+(define-converter ranking
+  :id (=> "principal_id")
+  :unique-id (=> "unique_id")
+  :score (=> "score")
+  :cheater-p (=> "cheater_p")
+  :player (into 'player (=> "info"))
+  :updated-time (->date (=> "updated_time"))
+  :sorting (=> "order"))
+
+(define-class schedule ()
+  (id
+   mode
+   rule
+   start-time
+   end-time
+   stages))
+
+(define-unreadable-printer schedule
+  "~a-~a {~a}"
+  (fmttime (start-time schedule) :format :hour)
+  (fmttime (end-time schedule) :format :hour)
+  (id schedule))
+
+(define-converter schedule
+  :id (=> "id")
+  :mode (->mode (=> "mode" "key"))
+  :rule (->rule (=> "rule" "key"))
+  :start-time (->date (=> "start_time"))
+  :end-time (->date (=> "end_time"))
+  :stages (remove NIL (list (into 'stage (=> "stage_a"))
+                            (into 'stage (=> "stage_b"))
+                            (into 'stage (=> "stage_c")))))
+
+(define-class timeline ()
+  (id
+   salmon-run
+   stats
+   schedule
+   challenge
+   paint-points
+   merchandise
+   rank-up-match
+   dlc-available-p
+   new-weapons))
+
+(define-unreadable-printer timeline
+  "{~a}" (id timeline))
+
+(define-converter timeline
+  :id (=> "unique_id")
+  :salmon-run (into 'salmon-run (=> "coop"))
+  :stats (into 'result (=> "stats" "recents"))
+  :schedule (list :regular (into 'schedule (=> "schedule" "schedules" "regular"))
+                  :ranked (into 'schedule (=> "schedule" "schedules" "gachi"))
+                  :league (into 'schedule (=> "schedule" "schedules" "league")))
+  :challenge (list :next (into 'challenge (=> "challenge" "next_challenge"))
+                   :previous (into 'challenge (=> "challenge" "last_archived_challenge")))
+  :paint-points (=> "challenge" "total_paint_point")
+  :merchandise (into 'merchandise (=> "onlineshop" "merchandise"))
+  :rank-up-match (into 'result (=> "udemae" "stat"))
+  :dlc-available-p (=> "download_contents" "is_available")
+  :new-weapons (into 'weapon-release (=> "weapon_availability" "availabilities")))
+
+(define-class weapon-release ()
+  (weapon
+   release-time))
+
+(define-unreadable-printer weapon-release
+  "~a ~a" (fmttime (release-time weapon-release) :format :date) (name (weapon weapon-release)))
+
+(define-converter weapon-release
+  :weapon (into 'weapon (=> "weapon"))
+  :release-time (->date (=> "release_time")))
+
+(define-class salmon-run ()
+  (stage
+   end-time
+   start-time
+   weapons
+   reward))
+
+(define-unreadable-printer salmon-run
+  "~a-~a ~a"
+  (fmttime (start-time salmon-run) :format :hour)
+  (fmttime (end-time salmon-run) :format :hour)
+  (name (stage salmon-run)))
+
+(define-converter salmon-run
+  :stage (into 'stage (=> "schedule" "stage"))
+  :end-time (->date (=> "schedule" "end_time"))
+  :start-time (->date (=> "schedule" "start_time"))
+  :weapons (into 'weapon (=> "schedule" "weapons"))
+  :reward (into 'gear (=> "reward_gear" "gear")))
+
+(define-class challenge ()
+  (id
+   name
+   paint-points
+   image))
+
+(define-unreadable-printer challenge
+  "~a ~ap" (name challenge) (paint-points challenge))
+
+(define-converter challenge
+  :id (=> "key")
+  :name (=> "name")
+  :paint-points (=> "paint_points")
   :image (=> "image"))

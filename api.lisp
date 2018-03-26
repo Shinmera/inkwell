@@ -50,19 +50,19 @@
   (into 'single-player (request "/records/hero")))
 
 (defun schedules ()
-  (into 'schedule (request "/schedules")))
+  (let ((data (request "/schedules")))
+    (list :regular (into 'schedule (gethash "regular" data))
+          :ranked (into 'schedule (gethash "gachi" data))
+          :league (into 'schedule (gethash "league" data)))))
 
-(defun stages ()
+(defun list-stages ()
   (into 'stage (-> (request "/data/stages") "stages")))
 
 (defun timeline ()
   (into 'timeline (request "/timeline")))
 
-(defun nick-and-icon (user-id)
-  (let ((data (-> (request "/nickname_and_icon" :parameters `(("id" . ,user-id))) "nickname_and_icons" 0)))
-    (list :nickname (-> data "nickname")
-          :nsa-id (-> data "nsa_id")
-          :thumbnail (-> data "thumbnail_url"))))
+(defun user (user-id)
+  (into 'user (-> (request "/nickname_and_icon" :parameters `(("id" . ,user-id))) "nickname_and_icons" 0)))
 
 (defun active-festivals ()
   (into 'festival (-> (request "/festivals/active") "festivals")))
@@ -76,14 +76,21 @@
                                          :key (lambda (result) (gethash "festival_id" result))))
                           collect festival))))
 
-;; FIXME
 (defun votes (festival-id)
-  (request "/festivals/" :urlparts (list festival-id "votes")))
+  (let ((data (request "/festivals" :urlparts (list festival-id "votes"))))
+    (list (dolist (id (-> data "votes" "alpha"))
+            (into 'user (find id (-> data "nickname_and_icons")
+                              :key (lambda (user) (gethash "nsa_id" user)) :test #'string=)))
+          (dolist (id (-> data "votes" "bravo"))
+            (into 'user (find id (-> data "nickname_and_icons")
+                              :key (lambda (user) (gethash "nsa_id" user)) :test #'string=))))))
 
 (defun rankings (festival-id)
-  (request "/festivals/" :urlparts (list festival-id "rankings")))
+  (let ((data (request "/festivals" :urlparts (list festival-id "rankings"))))
+    (list (into 'ranking (-> data "rankings" "alpha"))
+          (into 'ranking (-> data "rankings" "bravo")))))
 
-(defun merchandise ()
+(defun onlineshop ()
   (let ((data (request "/onlineshop/merchandises")))
     (values (into 'merchandise (-> data "merchandises"))
             (into 'merchandise (-> data "ordered_info")))))

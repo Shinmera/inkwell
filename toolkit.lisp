@@ -56,10 +56,13 @@
 (defun ->keyword (string)
   (intern (string string) "KEYWORD"))
 
+(defun ->date (timestamp)
+  (local-time:unix-to-timestamp timestamp))
+
 (defun ->mode (string)
   (cond ((string= string "regular") :regular)
         ((string= string "gachi") :ranked)
-        ((string= string "") :league) ; FIXME
+        ((string= string "league") :league)
         (T :unknown)))
 
 (defun ->rule (string)
@@ -68,6 +71,14 @@
         ((string= string "tower_control") :tower-control)
         ((string= string "clam_blitz") :clam-blitz)
         (T :unknown)))
+
+(defun fmttime (date &key (format :full))
+  (let ((format (ecase format
+                  (:full '((:year 4) "." (:month 2) "." (:day 2) " " (:hour 2) ":" (:min 2) ":" (:sec 2)))
+                  (:hour '((:year 4) "." (:month 2) "." (:day 2) " " (:hour 2) ":" (:min 2)))
+                  (:date '((:year 4) "." (:month 2) "." (:day 2)))
+                  (:time '((:year 4) "." (:month 2) "." (:day 2))))))
+    (local-time:format-timestring NIL date :format format)))
 
 (defun ->weapon-name (string)
   (case (parse-integer string)

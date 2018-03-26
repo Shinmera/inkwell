@@ -13,8 +13,11 @@
   :homepage "https://github.com/Shinmera/inkwell"
   :serial T
   :components ((:file "package")
+               (:file "toolkit")
+               (:file "objects")
                (:file "api")
                (:file "documentation"))
   :depends-on (:drakma
                :yason
-               :alexandria))
+               :alexandria
+               :local-time))
