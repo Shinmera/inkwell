@@ -1,0 +1,597 @@
+<!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta charset="utf-8"> <title>Inkwell</title> <meta name="viewport" content="width=device-width"> <meta name="description" content="An API client for the Splatoon 2 Splatnet."> <meta name="author" content="Nicolas Hafner &lt;shinmera@tymoon.eu&gt;"> <style type="text/css"> body{
+          max-width: 1024px;
+          margin: 0 auto 0 auto;
+          font-family: sans-serif;
+          color: #333333;
+          font-size: 14pt;
+          padding: 5px;
+      }
+      body>header{
+          display:flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          max-width: 100%;
+          text-align: center;
+      }
+      body>header img{
+          max-width: 50%;
+      }
+      img{
+          max-width: 100%;
+          max-height: 100%;
+      }
+      code{
+          font-family: Consolas, Inconsolata, monospace;
+      }
+      a{
+          text-decoration: none;
+          color: #0055AA;
+      }
+      a img{
+          border: none;
+      }
+      #documentation{
+          text-align: justify;
+      }
+      #documentation pre{
+          margin-left: 20px;
+          overflow: auto;
+      }
+      #documentation img{
+          margin: 5px;
+      }
+      #symbol-index>ul{
+          list-style: none;
+          padding: 0;
+      }
+      #symbol-index .package>ul{
+          list-style: none;
+          padding: 0 0 0 10px;
+      }
+      #symbol-index .package .nicknames{
+          font-weight: normal;
+      }
+      #symbol-index .package h4{
+          display: inline-block;
+          margin: 0;
+      }
+      #symbol-index .package article{
+          margin: 0 0 15px 0;
+      }
+      #symbol-index .package article header{
+          font-size: 1.2em;
+          font-weight: normal;
+      }
+      #symbol-index .package .name{
+          margin-right: 5px;
+      }
+      #symbol-index .package .docstring{
+          margin: 0 0 0 15px;
+          white-space: pre-wrap;
+          font-size: 12pt;
+      }
+      @media (max-width: 800px){
+          body{font-size: 12pt;}
+      } </style> </head> <body> <header> <h1>inkwell</h1> <span class="version">1.0.0</span> <p class="description">An API client for the Splatoon 2 Splatnet.</p> </header> <main> <article id="documentation">  <div><h2 id="about_inkwell">About Inkwell</h2> <p>This is a client library for the Splatoon 2 Splatnet API. It offers access to player and battle statistics, basically exposing all the information available on the official Nintendo Switch mobile phone app.</p> <h2 id="how_to">How To</h2> <p>This library does not currently handle the log in flow, as it is not publicly documented. You will have to provide a valid session token in order to make requests against the API. In order to obtain this token, search for <a href="https://google.com/search?q=iksm_session">iksm_session</a> and use one of the methods described to sniff out the token from the phone app. Personally I've found the <a href="https://github.com/eliboa/ink-proxy">ink-proxy</a> method to be the easiest and most reliable.</p> <p>Once you have obtained the <code>iksm_session</code> token, you should plug it into the library:</p> <pre><code>(ql:quickload :inkwell)
+(<a href="http://l1sp.org/cl/setf">setf</a> inkwell:*session* &quot;adwdwadwaddadwadadwadawd&quot;)
+</code></pre> <p>From there you can retrieve information about current battles (<code><a href="#INKWELL:LIST-BATTLES">list-battles</a></code>, <code><a href="#INKWELL:BATTLE">battle</a></code>), single-player statistics (<code><a href="#INKWELL:SINGLE-PLAYER">single-player</a></code>), upcoming battle modes (<code><a href="#INKWELL:SCHEDULES">schedules</a></code>), specific users (<code><a href="#INKWELL:USER">user</a></code>), active and past splafests (<code><a href="#INKWELL:ACTIVE-FESTIVALS">active-festivals</a></code>, <code><a href="#INKWELL:LIST-FESTIVALS">list-festivals</a></code>, <code><a href="#INKWELL:VOTES">votes</a></code>, <code><a href="#INKWELL:RANKINGS">rankings</a></code>), and even the online shop merchandise (<code><a href="#INKWELL:SHOP-INFO">shop-info</a></code>, <code><a href="#INKWELL:ORDER">order</a></code>).</p> <pre><code>(<a href="#INKWELL:LIST-BATTLES">inkwell:list-battles</a>)
+; =&gt; (<a href="#INKWELL:BATTLE">#&lt;INKWELL:BATTLE</a> CLAM-BLITZ VICTORY {1111}&gt;
+;     #&lt;INKWELL:BATTLE CLAM-BLITZ LOSS {1110}&gt;
+;     #&lt;INKWELL:BATTLE CLAM-BLITZ VICTORY {1109}&gt;
+;     #&lt;INKWELL:BATTLE CLAM-BLITZ LOSS {1107}&gt;
+;     #&lt;INKWELL:BATTLE CLAM-BLITZ LOSS {1106}&gt;
+;     ...)
+</code></pre> <p>The library takes care to transform the results from the API into sensible objects for you to inspect and extract information from with ease. Have a look at the symbol index to see what is offered.</p> </div>  </article> <article id="copyright">  <h2>Copyright</h2> <span>inkwell</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.  © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span> .  This library can be obtained on <a href="https://github.com/Shinmera/inkwell">https://github.com/Shinmera/inkwell</a>.  </article>  <article id="symbol-index"> <h2>Package Index</h2> <ul><li class="package"> <h3> <a name="INKWELL" href="#INKWELL">INKWELL</a> <span class="nicknames">(ORG.SHIRAKUMO.INKWELL)</span> </h3> <ul><li> <a name="INKWELL:*BASE-URL*"> </a> <article id="SPECIAL INKWELL:*BASE-URL*"> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#SPECIAL%20INKWELL%3A%2ABASE-URL%2A">*BASE-URL*</a></code></h4>  </header> <div class="docstring"><pre>The base URL for all Splatnet resources.</pre></div> </article> </li><li> <a name="INKWELL:*SESSION*"> </a> <article id="SPECIAL INKWELL:*SESSION*"> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#SPECIAL%20INKWELL%3A%2ASESSION%2A">*SESSION*</a></code></h4>  </header> <div class="docstring"><pre>The iksm_session cookie value required for Splatnet requests.
+
+There is currently no automated procedure to generate
+or fetch such a token. You will have to use some form
+of MITM packet sniffing tool to extract it from requests
+from your Nintendo Switch mobile app. If you google for
+iskm_session you should find a couple of tutorials and
+tools to do it.</pre></div> </article> </li><li> <a name="INKWELL:ALPHA-TEAM"> </a> <article id="CLASS INKWELL:ALPHA-TEAM"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AALPHA-TEAM">ALPHA-TEAM</a></code></h4>  </header> <div class="docstring"><pre>Representation of team alpha for a festival (splatfest).
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:BATTLE"> </a> <article id="CLASS INKWELL:BATTLE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ABATTLE">BATTLE</a></code></h4>  </header> <div class="docstring"><pre>Representation of a battle result.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:VICTORY-P">VICTORY-P</a>
+See <a href="#INKWELL:SCORES">SCORES</a>
+See <a href="#INKWELL:POWER">POWER</a>
+See <a href="#INKWELL:START-TIME">START-TIME</a>
+See <a href="#INKWELL:DURATION">DURATION</a>
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:MODE">MODE</a>
+See <a href="#INKWELL:RULE">RULE</a>
+See <a href="#INKWELL:TEAMS">TEAMS</a></pre></div> </article> </li><li> <a name="INKWELL:BRAND"> </a> <article id="CLASS INKWELL:BRAND"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ABRAND">BRAND</a></code></h4>  </header> <div class="docstring"><pre>Representation of a gear brand.
+
+See <a href="#INKWELL:FREQUENT-SKILL">FREQUENT-SKILL</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:ID">ID</a></pre></div> </article> </li><li> <a name="INKWELL:BRAVO-TEAM"> </a> <article id="CLASS INKWELL:BRAVO-TEAM"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ABRAVO-TEAM">BRAVO-TEAM</a></code></h4>  </header> <div class="docstring"><pre>Representation of team bravo for a festival (splatfest).
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:CHALLENGE"> </a> <article id="CLASS INKWELL:CHALLENGE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ACHALLENGE">CHALLENGE</a></code></h4>  </header> <div class="docstring"><pre>Representation of an ink points challenge on the app.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:PAINT-POINTS">PAINT-POINTS</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a></pre></div> </article> </li><li> <a name="INKWELL:FESTIVAL"> </a> <article id="CLASS INKWELL:FESTIVAL"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AFESTIVAL">FESTIVAL</a></code></h4>  </header> <div class="docstring"><pre>Representation of a festival (splatfest).
+
+This is used for both past and future festivals, though
+some fields will not be available until the festival is
+over.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:TEAMS">TEAMS</a>
+See <a href="#INKWELL:ANNOUNCE-TIME">ANNOUNCE-TIME</a>
+See <a href="#INKWELL:START-TIME">START-TIME</a>
+See <a href="#INKWELL:END-TIME">END-TIME</a>
+See <a href="#INKWELL:SPECIAL-STAGE">SPECIAL-STAGE</a>
+See <a href="#INKWELL:RESULT-TIME">RESULT-TIME</a></pre></div> </article> </li><li> <a name="INKWELL:FESTIVAL-TEAM"> </a> <article id="CLASS INKWELL:FESTIVAL-TEAM"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AFESTIVAL-TEAM">FESTIVAL-TEAM</a></code></h4>  </header> <div class="docstring"><pre>Representation of a team for a festival (splatfest).
+
+This is used for both past and future festivals, though
+some fields will not be available until the festival is
+over.
+
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:LONG-NAME">LONG-NAME</a>
+See <a href="#INKWELL:COLOR">COLOR</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a>
+See <a href="#INKWELL:PARTICIPANTS">PARTICIPANTS</a>
+See <a href="#INKWELL:SOLO">SOLO</a>
+See <a href="#INKWELL:TEAM">TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:GEAR"> </a> <article id="CLASS INKWELL:GEAR"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AGEAR">GEAR</a></code></h4>  </header> <div class="docstring"><pre>Representation of a piece of gear a player character can wear.
+
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:KIND">KIND</a>
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:BRAND">BRAND</a>
+See <a href="#INKWELL:RARITY">RARITY</a>
+See <a href="#INKWELL:THUMBNAIL">THUMBNAIL</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a>
+See <a href="#INKWELL:SKILLS">SKILLS</a></pre></div> </article> </li><li> <a name="INKWELL:MERCHANDISE"> </a> <article id="CLASS INKWELL:MERCHANDISE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AMERCHANDISE">MERCHANDISE</a></code></h4>  </header> <div class="docstring"><pre>Representation of a piece of merchandise from the online shop.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:PRICE">PRICE</a>
+See <a href="#INKWELL:END-TIME">END-TIME</a>
+See <a href="#INKWELL:KIND">KIND</a>
+See <a href="#INKWELL:ID">ID</a></pre></div> </article> </li><li> <a name="INKWELL:PLAYER"> </a> <article id="CLASS INKWELL:PLAYER"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3APLAYER">PLAYER</a></code></h4>  </header> <div class="docstring"><pre>Representation of a player character in online matches.
+
+See <a href="#INKWELL:HEAD">HEAD</a>
+See <a href="#INKWELL:CLOTHES">CLOTHES</a>
+See <a href="#INKWELL:SHOES">SHOES</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:PLAYER-RANK">PLAYER-RANK</a>
+See <a href="#INKWELL:STAR-RANK">STAR-RANK</a>
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:RANK">RANK</a>
+See <a href="#INKWELL:NAME">NAME</a></pre></div> </article> </li><li> <a name="INKWELL:PLAYER-RESULT"> </a> <article id="CLASS INKWELL:PLAYER-RESULT"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3APLAYER-RESULT">PLAYER-RESULT</a></code></h4>  </header> <div class="docstring"><pre>Representation of a player's performance in an online match.
+
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:SORTING">SORTING</a>
+See PAINT-POINTST
+See <a href="#INKWELL:SPECIALS">SPECIALS</a>
+See <a href="#INKWELL:ASSISTS">ASSISTS</a>
+See <a href="#INKWELL:KILLS">KILLS</a>
+See <a href="#INKWELL:DEATHS">DEATHS</a></pre></div> </article> </li><li> <a name="INKWELL:RANK"> </a> <article id="CLASS INKWELL:RANK"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ARANK">RANK</a></code></h4>  </header> <div class="docstring"><pre>Representation of a player's rank in a ranked or league mode.
+
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:PROGRESS">PROGRESS</a>
+See <a href="#INKWELL:S-PLUS-NUMBER">S-PLUS-NUMBER</a></pre></div> </article> </li><li> <a name="INKWELL:RANKING"> </a> <article id="CLASS INKWELL:RANKING"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ARANKING">RANKING</a></code></h4>  </header> <div class="docstring"><pre>Representation of a festival (splatfest) ranking.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:UNIQUE-ID">UNIQUE-ID</a>
+See <a href="#INKWELL:SCORE">SCORE</a>
+See <a href="#INKWELL:CHEATER-P">CHEATER-P</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:UPDATED-TIME">UPDATED-TIME</a>
+See <a href="#INKWELL:SORTING">SORTING</a></pre></div> </article> </li><li> <a name="INKWELL:SALMON-RUN"> </a> <article id="CLASS INKWELL:SALMON-RUN"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASALMON-RUN">SALMON-RUN</a></code></h4>  </header> <div class="docstring"><pre>Representation of a Salmon Run shift.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:END-TIME">END-TIME</a>
+See <a href="#INKWELL:START-TIME">START-TIME</a>
+See <a href="#INKWELL:WEAPONS">WEAPONS</a>
+See <a href="#INKWELL:REWARD">REWARD</a></pre></div> </article> </li><li> <a name="INKWELL:SCHEDULE"> </a> <article id="CLASS INKWELL:SCHEDULE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASCHEDULE">SCHEDULE</a></code></h4>  </header> <div class="docstring"><pre>Representation of an online mode rotation schedule item.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:MODE">MODE</a>
+See <a href="#INKWELL:RULE">RULE</a>
+See <a href="#INKWELL:START-TIME">START-TIME</a>
+See <a href="#INKWELL:END-TIME">END-TIME</a>
+See <a href="#INKWELL:STAGES">STAGES</a></pre></div> </article> </li><li> <a name="INKWELL:SINGLE-PLAYER"> </a> <article id="CLASS INKWELL:SINGLE-PLAYER"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASINGLE-PLAYER">SINGLE-PLAYER</a></code></h4>  </header> <div class="docstring"><pre>Representation of single-player mode performance statistics.
+
+See <a href="#INKWELL:HONOR">HONOR</a>
+See <a href="#INKWELL:CLEAR-RATE">CLEAR-RATE</a>
+See <a href="#INKWELL:CLEARED-WEAPONS">CLEARED-WEAPONS</a>
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:SKILL"> </a> <article id="CLASS INKWELL:SKILL"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASKILL">SKILL</a></code></h4>  </header> <div class="docstring"><pre>Representation of a game power up skill.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a></pre></div> </article> </li><li> <a name="INKWELL:SPECIAL"> </a> <article id="CLASS INKWELL:SPECIAL"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASPECIAL">SPECIAL</a></code></h4>  </header> <div class="docstring"><pre>Representation of a special ability.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:IMAGE-A">IMAGE-A</a>
+See <a href="#INKWELL:IMAGE-B">IMAGE-B</a></pre></div> </article> </li><li> <a name="INKWELL:STAGE"> </a> <article id="CLASS INKWELL:STAGE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASTAGE">STAGE</a></code></h4>  </header> <div class="docstring"><pre>Representation of a stage on which matches take place.
+
+This counts both for regular matches and Salmon Run.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a></pre></div> </article> </li><li> <a name="INKWELL:STAGE-INFO"> </a> <article id="CLASS INKWELL:STAGE-INFO"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASTAGE-INFO">STAGE-INFO</a></code></h4>  </header> <div class="docstring"><pre>Representation of performance statistics on a single-player stage.
+
+See <a href="#INKWELL:AREA">AREA</a>
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:BOSS-P">BOSS-P</a>
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:SUB"> </a> <article id="CLASS INKWELL:SUB"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ASUB">SUB</a></code></h4>  </header> <div class="docstring"><pre>Representation of a sub-weapon.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:IMAGE-A">IMAGE-A</a>
+See <a href="#INKWELL:IMAGE-B">IMAGE-B</a></pre></div> </article> </li><li> <a name="INKWELL:TIMELINE"> </a> <article id="CLASS INKWELL:TIMELINE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3ATIMELINE">TIMELINE</a></code></h4>  </header> <div class="docstring"><pre>Representation of the overall timeline object.
+
+This object contains bits and pieces of information about
+the overall status of the splatnet for the user. It is
+used to present the &quot;home page&quot; on the Switch app for
+Splatoon.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a>
+See <a href="#INKWELL:STATS">STATS</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a>
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a>
+See PAINT-POINTST
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a>
+See <a href="#INKWELL:RANK-UP-MATCH">RANK-UP-MATCH</a>
+See <a href="#INKWELL:DLC-AVAILABLE-P">DLC-AVAILABLE-P</a>
+See <a href="#INKWELL:NEW-WEAPONS">NEW-WEAPONS</a></pre></div> </article> </li><li> <a name="INKWELL:USER"> </a> <article id="CLASS INKWELL:USER"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AUSER">USER</a></code></h4>  </header> <div class="docstring"><pre>Representation of a user account.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:THUMBNAIL">THUMBNAIL</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPON"> </a> <article id="CLASS INKWELL:WEAPON"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AWEAPON">WEAPON</a></code></h4>  </header> <div class="docstring"><pre>Representation of a weapon.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a>
+See <a href="#INKWELL:THUMBNAIL">THUMBNAIL</a>
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:SUB">SUB</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPON-INFO"> </a> <article id="CLASS INKWELL:WEAPON-INFO"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AWEAPON-INFO">WEAPON-INFO</a></code></h4>  </header> <div class="docstring"><pre>Representation of performance statistics of a weapon on a particular single-player stage.
+
+See <a href="#INKWELL:ID">ID</a>
+See <a href="#INKWELL:NAME">NAME</a>
+See <a href="#INKWELL:LEVEL">LEVEL</a>
+See <a href="#INKWELL:CLEAR-TIME">CLEAR-TIME</a>
+See <a href="#INKWELL:IMAGE">IMAGE</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPON-RELEASE"> </a> <article id="CLASS INKWELL:WEAPON-RELEASE"> <header class="class"> <span class="type">class</span>  <h4 class="name"><code><a href="#CLASS%20INKWELL%3AWEAPON-RELEASE">WEAPON-RELEASE</a></code></h4>  </header> <div class="docstring"><pre>Representation of a new weapon release.
+
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:RELEASE-TIME">RELEASE-TIME</a></pre></div> </article> </li><li> <a name="INKWELL:API-REQUEST-FAILED"> </a> <article id="CONDITION INKWELL:API-REQUEST-FAILED"> <header class="condition"> <span class="type">condition</span>  <h4 class="name"><code><a href="#CONDITION%20INKWELL%3AAPI-REQUEST-FAILED">API-REQUEST-FAILED</a></code></h4>  </header> <div class="docstring"><pre>Error signalled if a request fails for some reason.
+
+See <a href="#INKWELL:URL">URL</a>
+See <a href="#INKWELL:CODE">CODE</a>
+See <a href="#INKWELL:BODY">BODY</a></pre></div> </article> </li><li> <a name="INKWELL:ACTIVE-FESTIVALS"> </a> <article id="FUNCTION INKWELL:ACTIVE-FESTIVALS"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3AACTIVE-FESTIVALS">ACTIVE-FESTIVALS</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves active festivals (splatfests).
+
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a></pre></div> </article> </li><li> <a name="INKWELL:BATTLE"> </a> <article id="FUNCTION INKWELL:BATTLE"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ABATTLE">BATTLE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">BATTLE</code><code>)</code>  </header> <div class="docstring"><pre>Retrieves a specific battle result.
+
+Takes either a battle object or an ID.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:LIST-BATTLES"> </a> <article id="FUNCTION INKWELL:LIST-BATTLES"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ALIST-BATTLES">LIST-BATTLES</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves a list of recent battle results.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:LIST-FESTIVALS"> </a> <article id="FUNCTION INKWELL:LIST-FESTIVALS"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ALIST-FESTIVALS">LIST-FESTIVALS</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves past festivals (splatfests).
+
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a></pre></div> </article> </li><li> <a name="INKWELL:LIST-STAGES"> </a> <article id="FUNCTION INKWELL:LIST-STAGES"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ALIST-STAGES">LIST-STAGES</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Lists all available stages/maps.
+
+See <a href="#INKWELL:STAGE">STAGE</a></pre></div> </article> </li><li> <a name="INKWELL:ORDER"> </a> <article id="FUNCTION INKWELL:ORDER"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3AORDER">ORDER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">MERCHANDISE &amp;KEY OVERRIDE</code><code>)</code>  </header> <div class="docstring"><pre>Order a marchandise item from the online shop.
+
+Takes a MERCHANDISE instance, or a merchandise ID.
+
+If the user has already ordered something, and override is NIL,
+the requested merchandise will not be ordered.
+
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a></pre></div> </article> </li><li> <a name="INKWELL:RANKINGS"> </a> <article id="FUNCTION INKWELL:RANKINGS"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ARANKINGS">RANKINGS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FESTIVAL</code><code>)</code>  </header> <div class="docstring"><pre>Retrieves top-100 rank listings for a specific festival (splatfest).
+
+Takes a FESTIVAL instance, or a festival ID.
+
+Returns a list of two entries, the first being a list of the
+top 100 rankings for team alpha, the second being a list of the
+top 100 rankings for team bravo. The lists are sorted by rank.
+
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:REQUEST"> </a> <article id="FUNCTION INKWELL:REQUEST"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3AREQUEST">REQUEST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">ENDPOINT &amp;KEY URLPARTS PARAMETERS FORM-DATA (SESSION *SESSION*) STRING</code><code>)</code>  </header> <div class="docstring"><pre>Perform a request against the specified API endpoint.
+
+Note that the endpoint must begin with a slash. If you need
+to parameterise the URL, use the urlparts argument. Note that
+slashes are automatically inserted before each urlpart, so
+you will not need to do so yourself.
+
+In case of an error code being returned from the server, a
+condition of type API-REQUEST-FAILED is signalled.
+
+See <a href="#INKWELL:API-REQUEST-FAILED">API-REQUEST-FAILED</a>
+See <a href="#INKWELL:*SESSION*">*SESSION*</a></pre></div> </article> </li><li> <a name="INKWELL:SCHEDULES"> </a> <article id="FUNCTION INKWELL:SCHEDULES"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ASCHEDULES">SCHEDULES</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves schedule information for upcoming online rotations.
+
+Returns a plist of three keys, :REGULAR :RANKED and :LEAGUE.
+Each value is a list of SCHEDULE entries.
+
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a></pre></div> </article> </li><li> <a name="INKWELL:SHOP-INFO"> </a> <article id="FUNCTION INKWELL:SHOP-INFO"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ASHOP-INFO">SHOP-INFO</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves online shop information.
+
+Returns two values: a list of available merchandise, and, if
+the user has already ordered something, the ordered merchandise.
+
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a></pre></div> </article> </li><li> <a name="INKWELL:SINGLE-PLAYER"> </a> <article id="FUNCTION INKWELL:SINGLE-PLAYER"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ASINGLE-PLAYER">SINGLE-PLAYER</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves single-player mode statistics.
+
+See <a href="#INKWELL:SINGLE-PLAYER">SINGLE-PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:TIMELINE"> </a> <article id="FUNCTION INKWELL:TIMELINE"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3ATIMELINE">TIMELINE</a></code></h4> <code class="qualifiers"></code> <code class="arguments"></code><code>)</code>  </header> <div class="docstring"><pre>Retrieves the overall timeline object.
+
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:USER"> </a> <article id="FUNCTION INKWELL:USER"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3AUSER">USER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">USER</code><code>)</code>  </header> <div class="docstring"><pre>Retrieves information about a specific user.
+
+See <a href="#INKWELL:USER">USER</a></pre></div> </article> </li><li> <a name="INKWELL:VOTES"> </a> <article id="FUNCTION INKWELL:VOTES"> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#FUNCTION%20INKWELL%3AVOTES">VOTES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">FESTIVAL</code><code>)</code>  </header> <div class="docstring"><pre>Retrieves information about votes cast by your friends for a specific festival (splatfest).
+
+Takes a FESTIVAL instance, or a festival ID.
+
+Returns a list of two entries, the first being a list of all
+friends that voted for team alpha, and the second being a list
+of all friends that voted for team bravo.
+
+See <a href="#INKWELL:USER">USER</a></pre></div> </article> </li><li> <a name="INKWELL:ANNOUNCE-TIME"> </a> <article id="GENERIC INKWELL:ANNOUNCE-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AANNOUNCE-TIME">ANNOUNCE-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the timestamp on which the festival (splatfest) was announced.</pre></div> </article> </li><li> <a name="INKWELL:AREA"> </a> <article id="GENERIC INKWELL:AREA"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AAREA">AREA</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the ID of the area the stage-info is about.
+
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:ASSISTS"> </a> <article id="GENERIC INKWELL:ASSISTS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AASSISTS">ASSISTS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of assists the player achieved in the battle.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:BODY"> </a> <article id="GENERIC INKWELL:BODY"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ABODY">BODY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONDITION</code><code>)</code>  </header> <div class="docstring"><pre>The HTTP body as a string.
+
+See <a href="#INKWELL:API-REQUEST-FAILED">API-REQUEST-FAILED</a></pre></div> </article> </li><li> <a name="INKWELL:BOSS-P"> </a> <article id="GENERIC INKWELL:BOSS-P"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ABOSS-P">BOSS-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns whether this stage is a boss.
+
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:BRAND"> </a> <article id="GENERIC INKWELL:BRAND"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ABRAND">BRAND</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the brand of the gear.
+
+See <a href="#INKWELL:BRAND">BRAND</a>
+See <a href="#INKWELL:GEAR">GEAR</a></pre></div> </article> </li><li> <a name="INKWELL:CHALLENGE"> </a> <article id="GENERIC INKWELL:CHALLENGE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACHALLENGE">CHALLENGE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns information about the current ink point challenge.
+
+This is a plist of two keys, :NEXT and :PREVIOUS.
+Each value is a CHALLENGE instance.
+
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:CHEATER-P"> </a> <article id="GENERIC INKWELL:CHEATER-P"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACHEATER-P">CHEATER-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns whether the player was deemed to be a cheater or not.
+
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:CLEAR-RATE"> </a> <article id="GENERIC INKWELL:CLEAR-RATE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACLEAR-RATE">CLEAR-RATE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the overall clear-rate.
+
+1.0 means 100%, but it can go up to 10.
+
+See <a href="#INKWELL:SINGLE-PLAYER">SINGLE-PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:CLEAR-TIME"> </a> <article id="GENERIC INKWELL:CLEAR-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACLEAR-TIME">CLEAR-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the clear time using the weapon for a particular stage.
+
+The time is in seconds.
+
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:CLEARED-WEAPONS"> </a> <article id="GENERIC INKWELL:CLEARED-WEAPONS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACLEARED-WEAPONS">CLEARED-WEAPONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of cleared weapons.
+
+The list is composed of strings of the weapon names.
+
+See <a href="#INKWELL:SINGLE-PLAYER">SINGLE-PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:CLOTHES"> </a> <article id="GENERIC INKWELL:CLOTHES"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACLOTHES">CLOTHES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the chest clothes gear item.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:CODE"> </a> <article id="GENERIC INKWELL:CODE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACODE">CODE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONDITION</code><code>)</code>  </header> <div class="docstring"><pre>The HTTP status code that was returned.
+
+See <a href="#INKWELL:API-REQUEST-FAILED">API-REQUEST-FAILED</a></pre></div> </article> </li><li> <a name="INKWELL:COLOR"> </a> <article id="GENERIC INKWELL:COLOR"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ACOLOR">COLOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the colour of the festival (splatfest) team.
+
+This is a list with components R G B A.
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:DEATHS"> </a> <article id="GENERIC INKWELL:DEATHS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ADEATHS">DEATHS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of times the player died in the battle.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:DLC-AVAILABLE-P"> </a> <article id="GENERIC INKWELL:DLC-AVAILABLE-P"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ADLC-AVAILABLE-P">DLC-AVAILABLE-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns whether there is DLC ready to download.
+
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:DURATION"> </a> <article id="GENERIC INKWELL:DURATION"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ADURATION">DURATION</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the duration of the battle in seconds.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:END-TIME"> </a> <article id="GENERIC INKWELL:END-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AEND-TIME">END-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the timestamp on which this object becomes invalid/outdated.
+
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a>
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a>
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a></pre></div> </article> </li><li> <a name="INKWELL:FREQUENT-SKILL"> </a> <article id="GENERIC INKWELL:FREQUENT-SKILL"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AFREQUENT-SKILL">FREQUENT-SKILL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the skill that this brand usually puts on its primary slot.
+
+See <a href="#INKWELL:SKILL">SKILL</a>
+See <a href="#INKWELL:BRAND">BRAND</a></pre></div> </article> </li><li> <a name="INKWELL:GEAR"> </a> <article id="GENERIC INKWELL:GEAR"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AGEAR">GEAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the piece of gear this merchandise is selling.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a></pre></div> </article> </li><li> <a name="INKWELL:HEAD"> </a> <article id="GENERIC INKWELL:HEAD"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AHEAD">HEAD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the head gear item.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:HONOR"> </a> <article id="GENERIC INKWELL:HONOR"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AHONOR">HONOR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the single-player honor description.
+
+See <a href="#INKWELL:SINGLE-PLAYER">SINGLE-PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:ID"> </a> <article id="GENERIC INKWELL:ID"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AID">ID</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns some kind of ID (may be a string or number) to identify the object.
+
+Note that some IDs are not globally unique.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:SUB">SUB</a>
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a>
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a>
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a>
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a>
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:BRAND">BRAND</a>
+See <a href="#INKWELL:SKILL">SKILL</a>
+See <a href="#INKWELL:USER">USER</a>
+See <a href="#INKWELL:RANKING">RANKING</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a>
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a></pre></div> </article> </li><li> <a name="INKWELL:IMAGE"> </a> <article id="GENERIC INKWELL:IMAGE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AIMAGE">IMAGE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a full URL to an image resource showing the object.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a>
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a>
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:BRAND">BRAND</a>
+See <a href="#INKWELL:SKILL">SKILL</a>
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a></pre></div> </article> </li><li> <a name="INKWELL:IMAGE-A"> </a> <article id="GENERIC INKWELL:IMAGE-A"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AIMAGE-A">IMAGE-A</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a full URL for an image describing the object.
+
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:SUB">SUB</a></pre></div> </article> </li><li> <a name="INKWELL:IMAGE-B"> </a> <article id="GENERIC INKWELL:IMAGE-B"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AIMAGE-B">IMAGE-B</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a full URL for an image describing the object.
+
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:SUB">SUB</a></pre></div> </article> </li><li> <a name="INKWELL:KILLS"> </a> <article id="GENERIC INKWELL:KILLS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AKILLS">KILLS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of kills the player achieved in the battle.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:KIND"> </a> <article id="GENERIC INKWELL:KIND"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AKIND">KIND</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the kind of gear this is as a keyword.
+
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a>
+See <a href="#INKWELL:GEAR">GEAR</a></pre></div> </article> </li><li> <a name="INKWELL:LEVEL"> </a> <article id="GENERIC INKWELL:LEVEL"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ALEVEL">LEVEL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the level of the weapon.
+
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:LONG-NAME"> </a> <article id="GENERIC INKWELL:LONG-NAME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ALONG-NAME">LONG-NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the long, descriptive name of the festival (splatfest) team.
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:MERCHANDISE"> </a> <article id="GENERIC INKWELL:MERCHANDISE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AMERCHANDISE">MERCHANDISE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a single piece of merchandise currently available for purchase.
+
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:MODE"> </a> <article id="GENERIC INKWELL:MODE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AMODE">MODE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the game mode of the battle or schedule.
+
+Can be one of :REGULAR :RANKED :LEAGUE
+In case of new modes (super unlikely), :UNKNOWN may be returned.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a></pre></div> </article> </li><li> <a name="INKWELL:NAME"> </a> <article id="GENERIC INKWELL:NAME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ANAME">NAME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a string for the name of the object.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:RANK">RANK</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:SUB">SUB</a>
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a>
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a>
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:BRAND">BRAND</a>
+See <a href="#INKWELL:SKILL">SKILL</a>
+See <a href="#INKWELL:USER">USER</a>
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a></pre></div> </article> </li><li> <a name="INKWELL:NEW-WEAPONS"> </a> <article id="GENERIC INKWELL:NEW-WEAPONS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ANEW-WEAPONS">NEW-WEAPONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of new weapons that will be released soon / have been released recently.
+
+See <a href="#INKWELL:WEAPON-RELEASE">WEAPON-RELEASE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:PAINT-POINTS"> </a> <article id="GENERIC INKWELL:PAINT-POINTS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APAINT-POINTS">PAINT-POINTS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of paint points the player gained in the battle.
+
+See <a href="#INKWELL:PLAYER-RESULT">PLAYER-RESULT</a>
+See <a href="#INKWELL:CHALLENGE">CHALLENGE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:PARTICIPANTS"> </a> <article id="GENERIC INKWELL:PARTICIPANTS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APARTICIPANTS">PARTICIPANTS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of people that voted for this festival (splatfest) team.
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:PLAYER"> </a> <article id="GENERIC INKWELL:PLAYER"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APLAYER">PLAYER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the player associated with this object.
+
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:PLAYER-RESULT">PLAYER-RESULT</a>
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:PLAYER-RANK"> </a> <article id="GENERIC INKWELL:PLAYER-RANK"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APLAYER-RANK">PLAYER-RANK</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the player's rank number.
+
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:POWER"> </a> <article id="GENERIC INKWELL:POWER"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APOWER">POWER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the battle power.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:PRICE"> </a> <article id="GENERIC INKWELL:PRICE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APRICE">PRICE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the price of the merchandise.
+
+See <a href="#INKWELL:MERCHANDISE">MERCHANDISE</a></pre></div> </article> </li><li> <a name="INKWELL:PROGRESS"> </a> <article id="GENERIC INKWELL:PROGRESS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3APROGRESS">PROGRESS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the progress the player has made in the rank.
+
+See <a href="#INKWELL:RANK">RANK</a></pre></div> </article> </li><li> <a name="INKWELL:RANK"> </a> <article id="GENERIC INKWELL:RANK"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARANK">RANK</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the player's ranked/league rank information.
+
+See <a href="#INKWELL:RANK">RANK</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:RANK-UP-MATCH"> </a> <article id="GENERIC INKWELL:RANK-UP-MATCH"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARANK-UP-MATCH">RANK-UP-MATCH</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the last battle that caused the user to rank up, if any.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:RARITY"> </a> <article id="GENERIC INKWELL:RARITY"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARARITY">RARITY</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a rarity index of the gear.
+
+See <a href="#INKWELL:GEAR">GEAR</a></pre></div> </article> </li><li> <a name="INKWELL:RELEASE-TIME"> </a> <article id="GENERIC INKWELL:RELEASE-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARELEASE-TIME">RELEASE-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a timestamp of the date on which this weapon will become available.
+
+See <a href="#INKWELL:WEAPON-RELEASE">WEAPON-RELEASE</a></pre></div> </article> </li><li> <a name="INKWELL:RESULT-TIME"> </a> <article id="GENERIC INKWELL:RESULT-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARESULT-TIME">RESULT-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the timestamp on which the festival (splatfest) results are announced.
+
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a></pre></div> </article> </li><li> <a name="INKWELL:REWARD"> </a> <article id="GENERIC INKWELL:REWARD"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AREWARD">REWARD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the gear that can be won in this Salmon Run shift.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a></pre></div> </article> </li><li> <a name="INKWELL:RULE"> </a> <article id="GENERIC INKWELL:RULE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ARULE">RULE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the game rules of the battle or schedule
+
+Can be one of :TURF-WAR :SPLAT-ZONES :TOWER-CONTROL :CLAM-BLITZ
+In case of new rules (unlikely), :UNKNOWN may be returned.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a></pre></div> </article> </li><li> <a name="INKWELL:S-PLUS-NUMBER"> </a> <article id="GENERIC INKWELL:S-PLUS-NUMBER"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AS-PLUS-NUMBER">S-PLUS-NUMBER</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the S+ rank number, if any.
+
+See <a href="#INKWELL:RANK">RANK</a></pre></div> </article> </li><li> <a name="INKWELL:SALMON-RUN"> </a> <article id="GENERIC INKWELL:SALMON-RUN"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASALMON-RUN">SALMON-RUN</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a salmon-run object if there is currently a Salmon Run shift open.
+
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:SCHEDULE"> </a> <article id="GENERIC INKWELL:SCHEDULE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASCHEDULE">SCHEDULE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a few of the next schedule items.
+
+This is a plist of three keys, :REGULAR :RANKED and :LEAGUE.
+Each value is a list of SCHEDULE instances.
+
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:SCORE"> </a> <article id="GENERIC INKWELL:SCORE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASCORE">SCORE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the total score of this ranking.
+
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:SCORES"> </a> <article id="GENERIC INKWELL:SCORES"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASCORES">SCORES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of scores for the user's team and the opponent team.
+
+The scores are either a point count for ranked modes, or
+a percentage for turf war.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:SHOES"> </a> <article id="GENERIC INKWELL:SHOES"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASHOES">SHOES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the shoes gear item.
+
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:SKILLS"> </a> <article id="GENERIC INKWELL:SKILLS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASKILLS">SKILLS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of allocated skill slots.
+
+The first item is the primary skill slot.
+
+See <a href="#INKWELL:SKILL">SKILL</a>
+See <a href="#INKWELL:GEAR">GEAR</a></pre></div> </article> </li><li> <a name="INKWELL:SOLO"> </a> <article id="GENERIC INKWELL:SOLO"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASOLO">SOLO</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of won solo battles for this festival (splatfest) team.
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:SORTING"> </a> <article id="GENERIC INKWELL:SORTING"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASORTING">SORTING</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns an integer to sort the objects of this kind by.
+
+See <a href="#INKWELL:PLAYER-RESULT">PLAYER-RESULT</a>
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:SPECIAL"> </a> <article id="GENERIC INKWELL:SPECIAL"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASPECIAL">SPECIAL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the special ability the weapon allows.
+
+See <a href="#INKWELL:SPECIAL">SPECIAL</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a></pre></div> </article> </li><li> <a name="INKWELL:SPECIAL-STAGE"> </a> <article id="GENERIC INKWELL:SPECIAL-STAGE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASPECIAL-STAGE">SPECIAL-STAGE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the stage for the festival (splatfest)'s special stage.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a></pre></div> </article> </li><li> <a name="INKWELL:SPECIALS"> </a> <article id="GENERIC INKWELL:SPECIALS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASPECIALS">SPECIALS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of times the player used their special in the battle.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:STAGE"> </a> <article id="GENERIC INKWELL:STAGE"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTAGE">STAGE</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the stage where the battle took place.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a></pre></div> </article> </li><li> <a name="INKWELL:STAGE-INFO"> </a> <article id="GENERIC INKWELL:STAGE-INFO"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTAGE-INFO">STAGE-INFO</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of statistics about each single-player stage.
+
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a>
+See <a href="#INKWELL:SINGLE-PLAYER">SINGLE-PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:STAGES"> </a> <article id="GENERIC INKWELL:STAGES"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTAGES">STAGES</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the stages that will be played on for this schedule item.
+
+See <a href="#INKWELL:STAGE">STAGE</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a></pre></div> </article> </li><li> <a name="INKWELL:STAR-RANK"> </a> <article id="GENERIC INKWELL:STAR-RANK"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTAR-RANK">STAR-RANK</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the player's star rank number.
+
+See <a href="#INKWELL:PLAYER">PLAYER</a></pre></div> </article> </li><li> <a name="INKWELL:START-TIME"> </a> <article id="GENERIC INKWELL:START-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTART-TIME">START-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the starting date timestamp.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:FESTIVAL">FESTIVAL</a>
+See <a href="#INKWELL:SCHEDULE">SCHEDULE</a>
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a></pre></div> </article> </li><li> <a name="INKWELL:STATS"> </a> <article id="GENERIC INKWELL:STATS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASTATS">STATS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a few of the most recent battle results.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a>
+See <a href="#INKWELL:TIMELINE">TIMELINE</a></pre></div> </article> </li><li> <a name="INKWELL:SUB"> </a> <article id="GENERIC INKWELL:SUB"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ASUB">SUB</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the sub-weapon ability the weapon allows.
+
+See <a href="#INKWELL:SUB">SUB</a>
+See <a href="#INKWELL:WEAPON">WEAPON</a></pre></div> </article> </li><li> <a name="INKWELL:TEAM"> </a> <article id="GENERIC INKWELL:TEAM"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ATEAM">TEAM</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the number of won team battles for this festival (splatfest) team.
+
+See <a href="#INKWELL:FESTIVAL-TEAM">FESTIVAL-TEAM</a></pre></div> </article> </li><li> <a name="INKWELL:TEAMS"> </a> <article id="GENERIC INKWELL:TEAMS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ATEAMS">TEAMS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of two items for the teams for the battle.
+
+Each team list is sorted by the player-result's sorting.
+The first list is always the user's own team.
+
+See <a href="#INKWELL:PLAYER-RESULT">PLAYER-RESULT</a>
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:THUMBNAIL"> </a> <article id="GENERIC INKWELL:THUMBNAIL"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3ATHUMBNAIL">THUMBNAIL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a full URL for a thumbnail image representing the object.
+
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:GEAR">GEAR</a>
+See <a href="#INKWELL:USER">USER</a></pre></div> </article> </li><li> <a name="INKWELL:UNIQUE-ID"> </a> <article id="GENERIC INKWELL:UNIQUE-ID"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AUNIQUE-ID">UNIQUE-ID</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the unique id of this ranking.
+
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:UPDATED-TIME"> </a> <article id="GENERIC INKWELL:UPDATED-TIME"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AUPDATED-TIME">UPDATED-TIME</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a timestamp of the last time this ranking was updated.
+
+See <a href="#INKWELL:RANKING">RANKING</a></pre></div> </article> </li><li> <a name="INKWELL:URL"> </a> <article id="GENERIC INKWELL:URL"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AURL">URL</a></code></h4> <code class="qualifiers"></code> <code class="arguments">CONDITION</code><code>)</code>  </header> <div class="docstring"><pre>The URL to which the request failed.
+
+See <a href="#INKWELL:API-REQUEST-FAILED">API-REQUEST-FAILED</a></pre></div> </article> </li><li> <a name="INKWELL:VICTORY-P"> </a> <article id="GENERIC INKWELL:VICTORY-P"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AVICTORY-P">VICTORY-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns whether the battle was a victory for the user or not.
+
+See <a href="#INKWELL:BATTLE">BATTLE</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPON"> </a> <article id="GENERIC INKWELL:WEAPON"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AWEAPON">WEAPON</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns the weapon the player used or the weapon that is being released.
+
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:PLAYER">PLAYER</a>
+See <a href="#INKWELL:WEAPON-RELEASE">WEAPON-RELEASE</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPON-INFO"> </a> <article id="GENERIC INKWELL:WEAPON-INFO"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AWEAPON-INFO">WEAPON-INFO</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of weapon statistics for the stage.
+
+The list is sorted by the clear time, lowest first.
+
+See <a href="#INKWELL:WEAPON-INFO">WEAPON-INFO</a>
+See <a href="#INKWELL:STAGE-INFO">STAGE-INFO</a></pre></div> </article> </li><li> <a name="INKWELL:WEAPONS"> </a> <article id="GENERIC INKWELL:WEAPONS"> <header class="generic"> <span class="type">generic</span>  <code>(</code><h4 class="name"><code><a href="#GENERIC%20INKWELL%3AWEAPONS">WEAPONS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">OBJECT</code><code>)</code>  </header> <div class="docstring"><pre>Returns a list of weapons that will be handed out for this Salmon Run shift.
+
+See <a href="#INKWELL:WEAPON">WEAPON</a>
+See <a href="#INKWELL:SALMON-RUN">SALMON-RUN</a></pre></div> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
