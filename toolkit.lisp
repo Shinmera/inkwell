@@ -72,6 +72,9 @@
         ((string= string "clam_blitz") :clam-blitz)
         (T :unknown)))
 
+(defun ->url (url)
+  (format NIL "~a~a" *base-url* url))
+
 (defun fmttime (date &key (format :full))
   (let ((format (ecase format
                   (:full '((:year 4) "." (:month 2) "." (:day 2) " " (:hour 2) ":" (:min 2) ":" (:sec 2)))

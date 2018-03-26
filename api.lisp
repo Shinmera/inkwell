@@ -6,7 +6,7 @@
 
 (in-package #:org.shirakumo.inkwell)
 
-(defparameter *base-url* "https://app.splatoon2.nintendo.net/api")
+(defparameter *base-url* "https://app.splatoon2.nintendo.net")
 (defvar *session*)
 
 (define-condition api-request-failed (error)
@@ -30,7 +30,7 @@
                          :parameters parameters)))
 
 (defun request (endpoint &key urlparts parameters form-data (session *session*) string)
-  (let ((url (format NIL "~a~a~{/~a~}" *base-url* endpoint urlparts)))
+  (let ((url (format NIL "~a/api~a~{/~a~}" *base-url* endpoint urlparts)))
     (multiple-value-bind (stream code) (%request url parameters form-data session)
       (case code
         (200

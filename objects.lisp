@@ -52,7 +52,7 @@
 (define-converter stage
   :id (=> "id")
   :name (=> "name")
-  :image (=> "image"))
+  :image (->url (->url (=> "image"))))
 
 (define-class player-result ()
   (player
@@ -134,8 +134,8 @@
 (define-converter weapon
   :id (=> "id")
   :name (=> "name")
-  :image (=> "image")
-  :thumbnail (=> "thumbnail")
+  :image (->url (=> "image"))
+  :thumbnail (->url (=> "thumbnail"))
   :special (into 'special (=> "special"))
   :sub (into 'sub (=> "sub")))
 
@@ -151,8 +151,8 @@
 (define-converter special
   :id (=> "id")
   :name (=> "name")
-  :image-a (=> "image_a")
-  :image-b (=> "image_b"))
+  :image-a (->url (=> "image_a"))
+  :image-b (->url (=> "image_b")))
 
 (define-class sub ()
   (id
@@ -166,8 +166,8 @@
 (define-converter sub
   :id (=> "id")
   :name (=> "name")
-  :image-a (=> "image_a")
-  :image-b (=> "image_b"))
+  :image-a (->url (=> "image_a"))
+  :image-b (->url (=> "image_b")))
 
 (define-class single-player ()
   (honor
@@ -220,7 +220,7 @@
   :name (->weapon-name (=> "weapon_category"))
   :level (=> "weapon_level")
   :clear-time (=> "clear_time")
-  :image (=> "image"))
+  :image (->url (=> "image")))
 
 (define-class festival ()
   (id
@@ -262,7 +262,7 @@
                (=> "colors" "alpha" "g")
                (=> "colors" "alpha" "b")
                (=> "colors" "alpha" "a"))
-  :image (=> "images" "alpha")
+  :image (->url (=> "images" "alpha"))
   :participants (=> "result" "team_participants" "alpha")
   :solo (=> "result" "team_scores" "alpha_solo")
   :team (=> "result" "team_scores" "alpha_team"))
@@ -276,7 +276,7 @@
                (=> "colors" "bravo" "g")
                (=> "colors" "bravo" "b")
                (=> "colors" "bravo" "a"))
-  :image (=> "images" "bravo")
+  :image (->url (=> "images" "bravo"))
   :participants (=> "result" "team_participants" "bravo")
   :solo (=> "result" "team_scores" "bravo_solo")
   :team (=> "result" "team_scores" "bravo_team"))
@@ -318,8 +318,8 @@
   :id (=> "id")
   :brand (into 'brand (=> "brand"))
   :rarity (=> "rarity")
-  :thumbnail (=> "thumbnail")
-  :image (=> "image")
+  :thumbnail (->url (=> "thumbnail"))
+  :image (->url (=> "image"))
   :skills (list* (into 'skill (=> "main")) (into 'skill (=> "subs"))))
 
 (define-class brand ()
@@ -333,7 +333,7 @@
 
 (define-converter brand
   :frequent-skill (into 'skill (=> "frequent_skill"))
-  :image (=> "image")
+  :image (->url (=> "image"))
   :name (=> "name")
   :id (=> "id"))
 
@@ -348,7 +348,7 @@
 (define-converter skill
   :id (=> "id")
   :name (=> "name")
-  :image (=> "image"))
+  :image (->url (=> "image")))
 
 (define-class user ()
   (id
@@ -482,4 +482,4 @@
   :id (=> "key")
   :name (=> "name")
   :paint-points (=> "paint_points")
-  :image (=> "image"))
+  :image (->url (=> "image")))
