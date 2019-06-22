@@ -6,7 +6,7 @@
 
 (asdf:defsystem inkwell
   :version "1.0.0"
-  :license "Artistic"
+  :license "zlib"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
   :description "An API client for the Splatoon 2 Splatnet."
