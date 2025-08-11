@@ -4,7 +4,7 @@
   :author "Yukari Hafner <shinmera@tymoon.eu>"
   :maintainer "Yukari Hafner <shinmera@tymoon.eu>"
   :description "An API client for the Splatoon 2 Splatnet."
-  :homepage "https://github.com/Shinmera/inkwell"
+  :homepage "https://shinmera.com/project/inkwell"
   :serial T
   :components ((:file "package")
                (:file "toolkit")
